@@ -31,8 +31,12 @@ jobs:
             exit 1
           fi
           sudo xcode-select --switch "$XCODE_APP/Contents/Developer"
-          xcodebuild -version
-          xcodebuild -version | grep -q "Xcode 27.1"
+          XCODE_VERSION="$(xcodebuild -version)"
+          printf '%s\n' "$XCODE_VERSION"
+          if [[ "$XCODE_VERSION" != *"Xcode 27.1"* ]]; then
+            echo "::error::Expected Xcode 27.1."
+            exit 1
+          fi
 
       - name: Build unsigned device archive
         shell: bash
